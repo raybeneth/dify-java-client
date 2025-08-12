@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DifyWorkflowClientTest {
     private static final String BASE_URL = DifyTestConfig.getBaseUrl();
     private static final String API_KEY = DifyTestConfig.getWorkflowApiKey();
-    private static final String USER_ID = "test-user-" + System.currentTimeMillis();
+    private static final String USER_ID = "ruibin.zhou@nascent.cn";
 
     private DifyWorkflowClient workflowClient;
 
@@ -52,7 +52,11 @@ public class DifyWorkflowClientTest {
     public void testRunWorkflow() throws Exception {
         // 创建工作流请求
         Map<String, Object> inputs = new HashMap<>();
-        inputs.put("query", "请介绍一下人工智能的应用场景");
+        inputs.put("sql_text", "CREATE OR REPLACE VIEW kd_shop AS select dsi.group_id,platform,any_value(platform_name) " +
+                "platform_name  from datacloud_oshiman.dim_shop_info dsi inner join datacloud_oshiman " +
+                "dim_shop_view_relation_da da on dsi.shop_id = da.shop_id and da.view_id in (100000715,100000713) " +
+                "where EXISTS (select 1 from datacloud_oshiman.kd_order ko where ko.shop_id  = dsi.shop_id) " +
+                "and dsi.state = 1 group by group_id, platform");
 
         WorkflowRunRequest request = WorkflowRunRequest.builder()
                 .inputs(inputs)
